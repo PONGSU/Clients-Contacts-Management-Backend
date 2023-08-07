@@ -3,7 +3,7 @@
     
     "builds": [
       {
-        "src": "nome_do_projeto/wsgi.py",
+        "src": "clients_contacts/wsgi.py",
         "use": "@vercel/python",
         "config": {
           "maxLambdaSize": "15mb",
@@ -25,7 +25,7 @@
       },
       {
         "src": "/(.*)",
-        "dest": "nome_do_projeto/wsgi.py"
+        "dest": "clients_contacts/wsgi.py"
       }
     ]
    }
