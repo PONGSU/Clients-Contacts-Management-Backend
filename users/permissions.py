@@ -1,4 +1,5 @@
 from rest_framework import permissions
+
 from .models import User
 from rest_framework.views import View
 
@@ -15,7 +16,14 @@ class IsAdminUser(permissions.BasePermission):
 
 class IsAccountOwnerOrAdminUser(permissions.BasePermission):
     def has_object_permission(self, request, view: View, obj: User) -> bool:
+        if hasattr(obj, 'user'):
+            return bool(
+                (request.user == obj.user or request.user and request.user.is_admin)
+                and request.user.is_authenticated
+            )
+        
         return bool(
             (request.user == obj or request.user and request.user.is_admin)
             and request.user.is_authenticated
         )
+

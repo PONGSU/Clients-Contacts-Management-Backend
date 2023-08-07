@@ -41,6 +41,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 MY_APPS = [
     "users",
+    "contacts"
 ]
 
 THIRD_PARTY_APPS = [
