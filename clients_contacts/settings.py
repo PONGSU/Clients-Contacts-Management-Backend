@@ -16,12 +16,12 @@ from django.core.management.utils import get_random_secret_key
 import dj_database_url
 import os
 import dotenv
+import json
 
 dotenv.load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".vercel.app"]
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
@@ -119,17 +119,22 @@ DATABASES = {
     },
 }
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+if os.getenv("DATABASE_URL"):
+   DATABASES['default'] = dj_database_url.config()
+   DEBUG = False
 
-if DATABASE_URL:
-    db_from_env = dj_database_url.config(
-        default=DATABASE_URL, conn_max_age=500, ssl_require=True)
-    DATABASES["default"].update(db_from_env)
-    DEBUG = False
+STATICFILES_DIRS = os.path.join(BASE_DIR),
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
-if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# DATABASE_URL = os.getenv("DATABASE_URL")
+
+# if DATABASE_URL:
+#     DATABASES['default'] = dj_database_url.config()
+#     DEBUG = False
+
+# if not DEBUG:
+#     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+#     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Password validation
