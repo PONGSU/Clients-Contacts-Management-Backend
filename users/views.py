@@ -1,12 +1,12 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from .models import User
-from .serializers import NormalUserSerializer, AdminManageUserSerializer
+from .serializers import NormalUserSerializer, AdminManageUserSerializer, OptionalFieldsSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .permissions import IsAdminUser, IsAccountOwnerOrAdminUser
 from drf_spectacular.utils import extend_schema
+from rest_framework.views import Response
+from django.db import IntegrityError
 
-
-# Create your views here.
 class NormalUserView(generics.CreateAPIView):
     """
     Registro de usuários
@@ -64,7 +64,21 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         summary="Atualizar usuário",
     )
     def patch(self, request, *args, **kwargs):
-        return super().patch(request, *args, **kwargs)
+        instance = self.get_object()
+
+        data = request.data
+        for key, value in data.items():
+            setattr(instance, key, value)
+        try:
+            instance.save()
+        except IntegrityError as e:
+            if 'unique constraint' in str(e):
+                return Response({'error': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'An error occurred while saving data.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        serializer = self.get_serializer(instance)
+        return Response (serializer.data)
 
     @extend_schema(
         operation_id="users_delete_id",

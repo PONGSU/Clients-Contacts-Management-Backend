@@ -46,7 +46,8 @@ MY_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    "drf_spectacular",
+    "drf_spectacular",    
+    'corsheaders',
 ]
 
 DJANGO_APPS = [
@@ -65,11 +66,18 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://clients-contacts-pongsu.vercel.app",
+    "https://clients-contacts.vercel.app"
 ]
 
 ROOT_URLCONF = "clients_contacts.urls"
