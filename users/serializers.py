@@ -30,9 +30,9 @@ class NormalUserSerializer(serializers.ModelSerializer):
             "phone",
             "is_admin",
             "contacts",
-            "date_joined",
+            "created_at",
         ]
-        read_only_fields = ["id", "is_admin", "contacts", "date_joined"]
+        read_only_fields = ["id", "is_admin", "contacts", "created_at"]
         extra_kwargs = {
             "password": {"write_only": True},
             "username": {
@@ -73,9 +73,10 @@ class AdminManageUserSerializer(serializers.ModelSerializer):
             "name",
             "phone",
             "is_admin",
-            "contacts"
+            "contacts",
+            "created_at"
         ]
-        read_only_fields = ["id", "contacts"]
+        read_only_fields = ["id", "contacts", "created_at"]
         extra_kwargs = {
             "password": {"write_only": True},
             "username": {
@@ -89,18 +90,3 @@ class AdminManageUserSerializer(serializers.ModelSerializer):
             "email": {"validators": [UniqueValidator(queryset=User.objects.all())]},
         }
 
-
-class OptionalFieldsSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(required=False)
-    email = serializers.EmailField(required=False)
-    phone = serializers.CharField(required=False)
-
-    def patch(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.email = validated_data.get('email', instance.email)
-        instance.phone = validated_data.get('phone', instance.phone)
-        instance.save()
-        return instance
-    class Meta:
-        model = User
-        fields = '__all__'

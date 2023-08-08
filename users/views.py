@@ -1,6 +1,6 @@
 from rest_framework import generics, status
 from .models import User
-from .serializers import NormalUserSerializer, AdminManageUserSerializer, OptionalFieldsSerializer
+from .serializers import NormalUserSerializer, AdminManageUserSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .permissions import IsAdminUser, IsAccountOwnerOrAdminUser
 from drf_spectacular.utils import extend_schema
