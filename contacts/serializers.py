@@ -10,6 +10,7 @@ class ContactSerializer(serializers.ModelSerializer):
             "id",
             "email",
             "name",
-            "phone"
+            "phone",
+            "created_at"
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "created_at"]
